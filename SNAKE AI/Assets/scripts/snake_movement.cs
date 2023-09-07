@@ -8,6 +8,7 @@ public class snake_movement : MonoBehaviour
     Vector2 current_location;
     public int mode = 0;
     public Transform target;
+    [SerializeField] points point;
 
     // Start is called before the first frame update
     void Start()
@@ -91,6 +92,8 @@ public class snake_movement : MonoBehaviour
                 break;
         }
         //GetComponent<agent>().ixedUpdate();
+        point.Point();
+
         update_tail();
     }
 
