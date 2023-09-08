@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 public class Astar : MonoBehaviour
@@ -15,25 +16,30 @@ public class Astar : MonoBehaviour
 
     public GameObject dot;
 
+    public int it;
+
 
     class cordinate
     {
         public int X { get; }
         public int Y { get; }
         public float Value { get; }
+        public float Avalue;
+        public cordinate Parent;
 
-        public cordinate(int x, int y,float value)
+        public cordinate(int x, int y, float value ,float avalue, cordinate parent)
         {
+            
             X = x;
             Y = y;
             Value = value;
+            Parent = parent;
+            Avalue = avalue;
         }
     }
 
-    private Stack<cordinate> cordinateStack = new Stack<cordinate>();
 
     private List<cordinate>visited = new List<cordinate>();
-    private List<cordinate> path = new List<cordinate>();
     private List<cordinate> next = new List<cordinate>();
 
 
@@ -43,6 +49,9 @@ public class Astar : MonoBehaviour
     void Start()
     {
         grid = new float[(int)(Maxrange.x-Minrange.x), (int)(Maxrange.y-Minrange.y)];
+        it = 50;
+
+        findpath();
 
     }
 
@@ -57,8 +66,8 @@ public class Astar : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            cordinate side= findpath();
-            Debug.Log($"First: {side.X}, Second: {side.Y} , Value: {side.Value}");
+            findpath();
+            //Debug.Log($"First: {side.X}, Second: {side.Y} , Value: {side.Value}");
         }
     }
 
@@ -95,7 +104,7 @@ public class Astar : MonoBehaviour
 
     }
 
-    cordinate findpath()
+    void findpath()
     {
         map();
         //Debug.Log(head.position.x + " " + head.position.y);
@@ -104,118 +113,199 @@ public class Astar : MonoBehaviour
         x = (int)(Maxrange.x+ head.position.x);
         y = (int)(Maxrange.y+ head.position.y);
 
-        Debug.Log("       " + grid[x, y + 1] + "       ");
-        Debug.Log(grid[x - 1, y] + "    " + grid[x + 1, y]);
-        Debug.Log("       " + grid[x, y - 1] + "       ");
+        cordinate c = new cordinate(x, y, grid[x, y],1,null);
+        next.Add(c);
 
-        bool found = findpath(x, y);
 
-        if (!found)
+        //Debug.Log("       " + grid[x, y + 1] + "       ");
+        //Debug.Log(grid[x - 1, y] + "    " + grid[x + 1, y]);
+        //Debug.Log("       " + grid[x, y - 1] + "       ");
+
+        Debug.Log("---------------------------------------------------------------------");
+
+        for (int i = 0; i < 1000; i++)
         {
-            return null;
+            //Debug.Log(next[0].X + " " + next[0].Y);
+
+            c = next[0];
+            next.Remove(c);
+
+            if (c.Value == 0) break;
+
+            
+
+            if (visited.Exists(cor => cor.X == c.X && cor.Y == c.Y + 1))
+            {
+                Debug.Log("update");
+                int index = visited.FindIndex(pair => pair.X == c.X && pair.Y == c.Y + 1);
+                //Debug.Log((visited[index].Parent).Value);
+                if((visited[index].Parent) !=null)
+                Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X+" "+ (visited[index].Parent).Y);
+                if (c.Avalue < visited[index].Avalue)
+                    visited[index].Parent = c;
+                if ((visited[index].Parent) != null)
+                    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
+            }
+            else
+            {
+                Debug.Log("create");
+                cordinate co = new cordinate(c.X, c.Y + 1, grid[c.X, c.Y + 1], c.Avalue + 1, c);
+                next.Add(co);
+
+            }
+
+            Debug.Log("next_len " + next.Count);
+
+
+            if (visited.Exists(cor => cor.X == c.X + 1 && cor.Y == c.Y))
+            {
+                Debug.Log("update");
+                int index = visited.FindIndex(pair => pair.X == c.X + 1 && pair.Y == c.Y);
+                // Debug.Log(index);
+                if ((visited[index].Parent) != null)
+                    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
+
+                if (c.Avalue < visited[index].Avalue)
+                    visited[index].Parent = c;
+                if ((visited[index].Parent) != null)
+                    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
+            }
+            else
+            {
+                Debug.Log("create");
+                next.Add(new cordinate(c.X + 1, c.Y, grid[c.X + 1, c.Y], c.Avalue + 1, c));
+              
+            }
+
+
+            Debug.Log("next_len " + next.Count);
+
+
+            if (visited.Exists(cor => cor.X == c.X - 1 && cor.Y == c.Y))
+            {
+                Debug.Log("update");
+                int index = visited.FindIndex(pair => pair.X == c.X - 1 && pair.Y == c.Y);
+                //Debug.Log(index);
+                if ((visited[index].Parent) != null)
+                    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
+
+                if (c.Avalue < visited[index].Avalue)
+                    visited[index].Parent = c;
+                if ((visited[index].Parent) != null)
+                    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
+            }
+            else
+            {
+                Debug.Log("create");
+                next.Add(new cordinate(c.X - 1, c.Y, grid[c.X - 1, c.Y], c.Avalue + 1, c));
+               
+            }
+
+            Debug.Log("next_len " + next.Count);
+
+
+            if (visited.Exists(cor => cor.X == c.X && cor.Y == c.Y - 1))
+            {
+                Debug.Log("update");
+                int index = visited.FindIndex(pair => pair.X == c.X && pair.Y == c.Y - 1);
+                //Debug.Log(index);
+                if ((visited[index].Parent) != null)
+                    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
+
+                if (c.Avalue < visited[index].Avalue)
+                    visited[index].Parent = c;
+                if ((visited[index].Parent) != null)
+                    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
+            }
+            else
+            {
+                Debug.Log("create");
+                next.Add(new cordinate(c.X, c.Y - 1, grid[c.X, c.Y - 1], c.Avalue + 1, c));
+              
+            }
+
+
+
+            next.Sort((a, b) => a.Value.CompareTo(b.Value));
+
+            visited.Add(c);
+
+            Debug.Log("next_len " + next.Count + "  visited_len " + visited.Count);
+
+
+
+            Debug.Log("----------------------------------------");
+
+            foreach(var v in visited)
+            {
+                if (v.Parent == null)
+                {
+                    Debug.Log(v.X + " " + v.Y + "   " + v.Value + "   " + v.Avalue + "   NA" );
+                }
+                else
+                Debug.Log(v.X + " " + v.Y + "   " + v.Value + "   " + v.Avalue + "  " + v.Parent.X + " " + v.Parent.Y);
+            }
+
+            Debug.Log("----------------------------------------");
+
+
+            Debug.Log("---------------------------------------------------------------------");
+
+            Debug.Log(next.Count);
+
+
         }
 
-        //cordinate[] sides = {new cordinate(x, y + 1, grid[x, y + 1]), new cordinate(x-1, y, grid[x-1, y]), new cordinate(x+1, y, grid[x+1, y]), new cordinate(x, y - 1, grid[x, y - 1]) };
+        Debug.Log("final "+c.Parent.X + "  " + c.Parent.Y);
 
-        //Array.Sort(sides, (a, b) => b.Value.CompareTo(a.Value));
 
-        
+       
 
-        //foreach (var side in sides)
+
+        while (transform.childCount > 0)
+        {
+            DestroyImmediate(transform.GetChild(0).gameObject);
+        }
+        drawpath(c);
+
+        //foreach(var side in path)
         //{
-        //    Debug.Log($"First: {side.X}, Second: {side.Y} , Value: {side.Value}");
-        //    bool exists = visited.Exists(s => s.X ==side.X  && s.Y == side.Y);
-
-        //    if (!exists)
-        //    {
-        //        cordinateStack.Push(side);
-        //        visited.Add(side);
-        //    }
-
+        //    GameObject p = Instantiate(dot, transform);
+        //    p.transform.position = new Vector2(side.X-Maxrange.x, side.Y-Maxrange.y);
+        //    p.GetComponent<SpriteRenderer>().color = new Vector4(0, 1, 0, 1);
         //}
+
+
+
+        //cordinate last = path[path.Count - 1];
+
+        visited.Clear();
+        next.Clear();
+
+
+    }
+
+    void drawpath(cordinate c)
+    {
 
         while (transform.childCount > 0)
         {
             DestroyImmediate(transform.GetChild(0).gameObject);
         }
 
-        foreach(var side in path)
-        {
-            GameObject p = Instantiate(dot, transform);
-            p.transform.position = new Vector2(side.X-Maxrange.x, side.Y-Maxrange.y);
-            p.GetComponent<SpriteRenderer>().color = new Vector4(0, 1, 0, 1);
-        }
-
-
-        cordinate last = path[path.Count - 1];
-
-        path.Clear();
-        visited.Clear();
-        next.Clear();
-
-        return last;
-
-
-
+        drawpathhelp(c);
     }
 
-    bool findpath(int x,int y )
+    void drawpathhelp(cordinate c)
     {
-        if (grid[x, y] == 0)
-        {
-            Debug.Log("found   ");
-            path.Add(new cordinate(x, y, grid[x, y]));
-            return true;
-        }
-        Debug.Log("data " + x + " " + y);
-        bool ans=false;
 
-        cordinate s1 = new cordinate(x, y + 1, grid[x, y + 1]);
-        if (!visited.Exists(s => s.X == s1.X && s.Y == s1.Y))
-        next.Add(s1);
-
-        cordinate s2 = new cordinate(x-1, y, grid[x-1, y]);
-        if (!visited.Exists(s => s.X == s2.X && s.Y == s2.Y))
-            next.Add(s2);
-
-        cordinate s3 = new cordinate(x+1, y, grid[x+1, y]);
-        if (!visited.Exists(s => s.X == s3.X && s.Y == s3.Y))
-            next.Add(s3);
-
-        cordinate s4 = new cordinate(x, y - 1, grid[x, y - 1]);
-        if (!visited.Exists(s => s.X == s4.X && s.Y == s4.Y))
-            next.Add(s4);
-
-        //cordinate[] sides = { new cordinate(x, y + 1, grid[x, y + 1]), new cordinate(x - 1, y, grid[x - 1, y]), new cordinate(x + 1, y, grid[x + 1, y]), new cordinate(x, y - 1, grid[x, y - 1]) };
-
-        next.Sort((a, b) => (a.Value).CompareTo(b.Value));
-
-        foreach (var side in next)
-        {
-            next.Remove(side);
-
-
-            Debug.Log($"First: {side.X}, Second: {side.Y} , Value: {side.Value}");
-
-            if (side.Value!=float.MaxValue)
-            {
-                
-                visited.Add(side);
-
-                ans=findpath(side.X, side.Y);
-                if (ans) {
-                    path.Add(side);
-                    break;
-                }
-            }
-
-        }
-
-        
-
-        return ans;
+        Debug.Log("final " + c.X + "  " + c.Y);
+        GameObject p = Instantiate(dot, transform);
+        p.transform.position = new Vector2(c.X - Maxrange.x, c.Y - Maxrange.y);
+        p.GetComponent<SpriteRenderer>().color = new Vector4(0, 1, 0, 1);
+        if(c.Parent != null)
+            drawpathhelp(c.Parent);
     }
-
 
 
 
