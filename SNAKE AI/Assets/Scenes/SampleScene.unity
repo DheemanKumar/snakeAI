@@ -1984,6 +1984,53 @@ MonoBehaviour:
   head: {fileID: 789698798762812995}
   point: {fileID: 263522791}
   dot: {fileID: 119200834}
+  it: 0
+--- !u!1 &1471618148
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1471618149}
+  - component: {fileID: 1471618150}
+  m_Layer: 0
+  m_Name: Agent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1471618149
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471618148}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 19.380045, y: 1.9230981, z: -0.19409364}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1471618150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471618148}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a67debc8e71a40668199fdd71987773, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 8973873392667701815}
+  environment: {fileID: 1437100264}
 --- !u!1 &1761048133
 GameObject:
   m_ObjectHideFlags: 0
@@ -28605,6 +28652,8 @@ GameObject:
   - component: {fileID: 271849563552421367}
   - component: {fileID: 1501353175916735695}
   - component: {fileID: 8973873392667701817}
+  - component: {fileID: 8973873392667701818}
+  - component: {fileID: 8973873392667701819}
   m_Layer: 0
   m_Name: snake head
   m_TagString: snake
@@ -28627,6 +28676,35 @@ MonoBehaviour:
   boundry_x: {x: 15, y: -15}
   boundry_y: {x: 15, y: -15}
   distance: []
+--- !u!114 &8973873392667701818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8973873392667701815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f5ee9b869e4f4f49a1b2b9d817b0355, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distance: []
+  next: {fileID: 5314520577177617592}
+  radius: 5
+--- !u!114 &8973873392667701819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8973873392667701815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f5f479e690fa44c189eb5a70945d1cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distance: []
+  Point: {fileID: 263522791}
 --- !u!4 &9045587325079607354
 Transform:
   m_ObjectHideFlags: 0

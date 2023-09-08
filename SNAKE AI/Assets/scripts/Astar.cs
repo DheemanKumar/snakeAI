@@ -104,7 +104,7 @@ public class Astar : MonoBehaviour
 
     }
 
-    void findpath()
+    public int findpath()
     {
         map();
         //Debug.Log(head.position.x + " " + head.position.y);
@@ -121,7 +121,7 @@ public class Astar : MonoBehaviour
         //Debug.Log(grid[x - 1, y] + "    " + grid[x + 1, y]);
         //Debug.Log("       " + grid[x, y - 1] + "       ");
 
-        Debug.Log("---------------------------------------------------------------------");
+        //Debug.Log("---------------------------------------------------------------------");
 
         for (int i = 0; i < 1000; i++)
         {
@@ -136,90 +136,90 @@ public class Astar : MonoBehaviour
 
             if (visited.Exists(cor => cor.X == c.X && cor.Y == c.Y + 1))
             {
-                Debug.Log("update");
+                //Debug.Log("update");
                 int index = visited.FindIndex(pair => pair.X == c.X && pair.Y == c.Y + 1);
                 //Debug.Log((visited[index].Parent).Value);
-                if((visited[index].Parent) !=null)
-                Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X+" "+ (visited[index].Parent).Y);
+                //if((visited[index].Parent) !=null)
+                //Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X+" "+ (visited[index].Parent).Y);
                 if (c.Avalue < visited[index].Avalue)
                     visited[index].Parent = c;
-                if ((visited[index].Parent) != null)
-                    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
+                //if ((visited[index].Parent) != null)
+                //    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
             }
             else
             {
-                Debug.Log("create");
+                //Debug.Log("create");
                 cordinate co = new cordinate(c.X, c.Y + 1, grid[c.X, c.Y + 1], c.Avalue + 1, c);
                 next.Add(co);
 
             }
 
-            Debug.Log("next_len " + next.Count);
+            //Debug.Log("next_len " + next.Count);
 
 
             if (visited.Exists(cor => cor.X == c.X + 1 && cor.Y == c.Y))
             {
-                Debug.Log("update");
+                //Debug.Log("update");
                 int index = visited.FindIndex(pair => pair.X == c.X + 1 && pair.Y == c.Y);
                 // Debug.Log(index);
-                if ((visited[index].Parent) != null)
-                    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
+                //if ((visited[index].Parent) != null)
+                //    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
 
                 if (c.Avalue < visited[index].Avalue)
                     visited[index].Parent = c;
-                if ((visited[index].Parent) != null)
-                    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
+                //if ((visited[index].Parent) != null)
+                //    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
             }
             else
             {
-                Debug.Log("create");
+                //Debug.Log("create");
                 next.Add(new cordinate(c.X + 1, c.Y, grid[c.X + 1, c.Y], c.Avalue + 1, c));
               
             }
 
 
-            Debug.Log("next_len " + next.Count);
+            //Debug.Log("next_len " + next.Count);
 
 
             if (visited.Exists(cor => cor.X == c.X - 1 && cor.Y == c.Y))
             {
-                Debug.Log("update");
+                //Debug.Log("update");
                 int index = visited.FindIndex(pair => pair.X == c.X - 1 && pair.Y == c.Y);
                 //Debug.Log(index);
-                if ((visited[index].Parent) != null)
-                    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
+                //if ((visited[index].Parent) != null)
+                //    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
 
                 if (c.Avalue < visited[index].Avalue)
                     visited[index].Parent = c;
-                if ((visited[index].Parent) != null)
-                    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
+                //if ((visited[index].Parent) != null)
+                //    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
             }
             else
             {
-                Debug.Log("create");
+                //Debug.Log("create");
                 next.Add(new cordinate(c.X - 1, c.Y, grid[c.X - 1, c.Y], c.Avalue + 1, c));
                
             }
 
-            Debug.Log("next_len " + next.Count);
+            //Debug.Log("next_len " + next.Count);
 
 
             if (visited.Exists(cor => cor.X == c.X && cor.Y == c.Y - 1))
             {
-                Debug.Log("update");
+                //Debug.Log("update");
                 int index = visited.FindIndex(pair => pair.X == c.X && pair.Y == c.Y - 1);
                 //Debug.Log(index);
-                if ((visited[index].Parent) != null)
-                    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
+                //if ((visited[index].Parent) != null)
+                //    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
 
                 if (c.Avalue < visited[index].Avalue)
                     visited[index].Parent = c;
-                if ((visited[index].Parent) != null)
-                    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
+                //if ((visited[index].Parent) != null)
+                //    Debug.Log(c.Avalue + " " + visited[index].Avalue + "  " + (c.Avalue > visited[index].Avalue) + "  " + (visited[index].Parent).X + " " + (visited[index].Parent).Y);
             }
             else
             {
-                Debug.Log("create");
+                //Debug.Log("create");
                 next.Add(new cordinate(c.X, c.Y - 1, grid[c.X, c.Y - 1], c.Avalue + 1, c));
               
             }
@@ -230,43 +230,44 @@ public class Astar : MonoBehaviour
 
             visited.Add(c);
 
-            Debug.Log("next_len " + next.Count + "  visited_len " + visited.Count);
+            //Debug.Log("next_len " + next.Count + "  visited_len " + visited.Count);
 
 
 
-            Debug.Log("----------------------------------------");
+            //Debug.Log("----------------------------------------");
 
-            foreach(var v in visited)
-            {
-                if (v.Parent == null)
-                {
-                    Debug.Log(v.X + " " + v.Y + "   " + v.Value + "   " + v.Avalue + "   NA" );
-                }
-                else
-                Debug.Log(v.X + " " + v.Y + "   " + v.Value + "   " + v.Avalue + "  " + v.Parent.X + " " + v.Parent.Y);
-            }
+            //foreach(var v in visited)
+            //{
+            //    if (v.Parent == null)
+            //    {
+            //        Debug.Log(v.X + " " + v.Y + "   " + v.Value + "   " + v.Avalue + "   NA" );
+            //    }
+            //    else
+            //    Debug.Log(v.X + " " + v.Y + "   " + v.Value + "   " + v.Avalue + "  " + v.Parent.X + " " + v.Parent.Y);
+            //}
 
-            Debug.Log("----------------------------------------");
+            //Debug.Log("----------------------------------------");
 
 
-            Debug.Log("---------------------------------------------------------------------");
+            //Debug.Log("---------------------------------------------------------------------");
 
-            Debug.Log(next.Count);
 
 
         }
 
-        Debug.Log("final "+c.Parent.X + "  " + c.Parent.Y);
+        //Debug.Log("final "+c.Parent.X + "  " + c.Parent.Y);
 
 
        
 
 
-        while (transform.childCount > 0)
-        {
-            DestroyImmediate(transform.GetChild(0).gameObject);
-        }
+        //while (transform.childCount > 0)
+        //{
+        //    DestroyImmediate(transform.GetChild(0).gameObject);
+        //}
         drawpath(c);
+
+        int ans=(findcost(c));
 
         //foreach(var side in path)
         //{
@@ -282,7 +283,7 @@ public class Astar : MonoBehaviour
         visited.Clear();
         next.Clear();
 
-
+        return ans;
     }
 
     void drawpath(cordinate c)
@@ -296,10 +297,24 @@ public class Astar : MonoBehaviour
         drawpathhelp(c);
     }
 
+    int findcost(cordinate c)
+    {
+        int cost=0;
+
+        if (c.Parent == null)
+        {
+            return 1;
+        }
+        else
+            cost=findcost(c.Parent);
+
+        return cost + 1;
+    }
+
     void drawpathhelp(cordinate c)
     {
 
-        Debug.Log("final " + c.X + "  " + c.Y);
+        //Debug.Log("final " + c.X + "  " + c.Y);
         GameObject p = Instantiate(dot, transform);
         p.transform.position = new Vector2(c.X - Maxrange.x, c.Y - Maxrange.y);
         p.GetComponent<SpriteRenderer>().color = new Vector4(0, 1, 0, 1);

@@ -21,9 +21,9 @@ public class snake_movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P)) {
-            Debug.Log( GetComponent<dijkstra>().find(target.GetChild(0)));
-        }
+        //if (Input.GetKeyDown(KeyCode.P)) {
+        //    Debug.Log( GetComponent<dijkstra>().find(target.GetChild(0)));
+        //}
         
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -92,7 +92,7 @@ public class snake_movement : MonoBehaviour
                 break;
         }
         //GetComponent<agent>().ixedUpdate();
-        point.Point();
+        //point.Point();
 
         update_tail();
     }

@@ -7,6 +7,7 @@ public class sidebody : MonoBehaviour
     public float[] distance;
 
     public follow next;
+    public int radius=5;
 
     private snake_movement sm;
 
@@ -28,7 +29,7 @@ public class sidebody : MonoBehaviour
             
 
             case 0:
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < radius; i++) {
                     if( next.check(new Vector3(transform.position.x, transform.position.y+i, transform.position.z)) && !a) {
                     a = true;
                         distance[1] = i;
@@ -49,14 +50,14 @@ public class sidebody : MonoBehaviour
                     }
                 }
 
-                if (!a) distance[1] = 4;
-                if (!b) distance[0] = 4;
-                if (!c) distance[2] = 4;
+                if (!a) distance[1] = radius;
+                if (!b) distance[0] = radius;
+                if (!c) distance[2] = radius;
 
                 break;
 
             case 1:
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < radius; i++)
                 {
                     if (next.check(new Vector3(transform.position.x+i, transform.position.y , transform.position.z)) && !a)
                     {
@@ -79,14 +80,14 @@ public class sidebody : MonoBehaviour
                     }
                 }
 
-                if (!a) distance[1] = 4;
-                if (!b) distance[0] = 4;
-                if (!c) distance[2] = 4;
+                if (!a) distance[1] = radius;
+                if (!b) distance[0] = radius;
+                if (!c) distance[2] = radius;
 
                 break;
 
             case 2:
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < radius; i++)
                 {
                     if (next.check(new Vector3(transform.position.x , transform.position.y-i, transform.position.z)) && !a)
                     {
@@ -109,14 +110,14 @@ public class sidebody : MonoBehaviour
                     }
                 }
 
-                if (!a) distance[1] = 4;
-                if (!b) distance[0] = 4;
-                if (!c) distance[2] = 4;
+                if (!a) distance[1] = radius;
+                if (!b) distance[0] = radius;
+                if (!c) distance[2] = radius;
 
                 break;
 
             case 3:
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < radius; i++)
                 {
                     if (next.check(new Vector3(transform.position.x - i, transform.position.y, transform.position.z)) && !a)
                     {
@@ -139,9 +140,9 @@ public class sidebody : MonoBehaviour
                     }
                 }
 
-                if (!a) distance[1] = 4;
-                if (!b) distance[0] = 4;
-                if (!c) distance[2] = 4;
+                if (!a) distance[1] = radius;
+                if (!b) distance[0] = radius;
+                if (!c) distance[2] = radius;
 
                 break;
 
