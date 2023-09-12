@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
-using System;
+//using System;
 
 public class E_greedy : MonoBehaviour
 {
@@ -54,6 +54,8 @@ public class E_greedy : MonoBehaviour
 
     List<state> States;
 
+    public float E=0.5f;
+
     public GameObject player;
     public GameObject environment;
     public GameObject point;
@@ -66,13 +68,23 @@ public class E_greedy : MonoBehaviour
     int past, present;
 
     // Start is called before the first frame update
-    void Start()
+
+    private void Awake()
     {
+        // Ensure that this object persists across scene changes
         States = new List<state>();
+        DontDestroyOnLoad(gameObject);
         bd = player.GetComponent<boundry>();
         sd = player.GetComponent<sidebody>();
         pd = player.GetComponent<pointdiatance>();
         star = environment.GetComponent<Astar>();
+    }
+
+    void Start()
+    {
+        if (E > 1) E = 1;
+        if (E < 0) E = 0;
+        
     }
 
     // Update is called once per frame
@@ -91,24 +103,70 @@ public class E_greedy : MonoBehaviour
             Debug.Log(s.Front+" "+s.Left+" "+s.Right+" "+s.Actions.Count+" "+s.Rewards.Count);
         }
 
-        if (Input.GetKey(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.K))
         {
-            past=star.findpath();
+            Debug.Log(star.findpath());
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            step();
+        }
+        if (Input.GetKey(KeyCode.T))
+        {
+            step();
+        }
+    }
+
+    void step()
+    {
+        past = star.findpath();
+        //Debug.Log("past " + past);
+        if (past != -1)
+        {
+            sd.calcilatedistance();
             state s = new state(Mathf.Min(bd.distance[1], sd.distance[1]), Mathf.Min(bd.distance[0], sd.distance[0]), Mathf.Min(bd.distance[2], sd.distance[2]), pd.distance[0], pd.distance[1]);
             //Debug.Log(s.GetQ(0) + " " + s.GetQ(1) + " " + s.GetQ(2));
+
+            int act;
             float[] q = getQ(s);
-            Debug.Log(q[0] + " " + q[1] + " " + q[2]);
-            int act = FindIndexOfMax(q);
+            if (Random.Range(0.0f, 1.0f) > E)
+            {
+                // greedy
+                Debug.Log("greedy");
+                
+                act = FindIndexOfMax(q);
+            }
+            else
+            {
+                //explore
+                Debug.Log("explore");
+                act = Random.Range(0, 3);
+            }
+
+            Debug.Log("states (" + s.Front + " " + s.Left + " " + s.Right + " " + s.Ahead + " " + s.Side + ")  Qvalues (" + q[0] + " " + q[1] + " " + q[2] + ")");
+
             player.GetComponent<snake_movement>().move(act);
-            present = star.findpath();
-            int reward = past - present;
 
-            if (point.GetComponent<points>().Point()) reward = 1;
+            sd.calcilatedistance();
+            if (point.GetComponent<points>().Point())
+            {
+                present = -1;
+                updatStates(s, act, 1);
+            }
+            else if(sd.distance[0] == 0 || sd.distance[1] == 0 || sd.distance[2] == 0)
+            {
+                present = -1;
+                updatStates(s, act, -1);
+            }
 
-            if (sd.distance[0] == 0 || sd.distance[1] == 0 || sd.distance[2] == 0) reward = -1;
+            else { present = star.findpath(); }
 
-            updatStates(s, act, reward);
-            Debug.Log(act + "     (" + past + "  " + present + ")    " + (reward));
+            if (present != -1)
+            {
+                updatStates(s, act, past - present);
+                //Debug.Log(act + "     (" + past + "  " + present + ")    " + (past - present));
+            }
         }
     }
 
@@ -158,14 +216,17 @@ public class E_greedy : MonoBehaviour
             return -1; // or throw an exception, depending on your requirements
         }
 
-        int maxIndex = 0; // Assume the first element is the maximum
+        int maxIndex = 1; // Assume the first element is the maximum
 
-        for (int i = 1; i < array.Length; i++)
+        for (int i = 0; i < array.Length; i++)
         {
-            if (array[i] > array[maxIndex])
+            if (i != 1)
             {
-                // Update maxIndex if a larger element is found
-                maxIndex = i;
+                if (array[i] > array[maxIndex])
+                {
+                    // Update maxIndex if a larger element is found
+                    maxIndex = i;
+                }
             }
         }
 

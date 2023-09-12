@@ -20,8 +20,8 @@ public class sidebody : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    public void calcilatedistance() { 
+
         bool a = false;
         bool b = false;
         bool c = false;

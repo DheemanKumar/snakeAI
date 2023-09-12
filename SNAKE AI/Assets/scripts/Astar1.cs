@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-public class Astar : MonoBehaviour
+public class Astar1 : MonoBehaviour
 {
     public Vector2 Maxrange;
     public Vector2 Minrange;
     float[,] grid;
 
-    public boundry bd;
+    public Transform walls;
     public Transform head;
     public Transform point;
 
@@ -76,28 +76,48 @@ public class Astar : MonoBehaviour
         x = (int)Minrange.x;
         y = (int)Minrange.y;
 
+
+        
+
+
         for (int i = 0; i < (int)(Maxrange.x - Minrange.x); i++)
         {
             for (int j = 0; j < (int)(Maxrange.y - Minrange.y); j++)
             {
                 if ((head.position.x == x + i && head.position.y == y + j) ||
-                    (head.GetChild(0).GetComponent<follow>().check(new Vector3(x + i, y + j, 0))) ||
-                    (bd.boundry_x.x <= x + i) || (bd.boundry_x.y > x + i) || (bd.boundry_y.x <= y + j) || (bd.boundry_y.y > j + y))
+                    iswall(x+i,y+j) ||
+                    i + 1 == (int)(Maxrange.x - Minrange.x) || i == 0 ||
+                    j + 1 == (int)(Maxrange.y - Minrange.y) || j == 0
+                    )
                     grid[i, j] = float.MaxValue;
-                else grid[i, j] = Vector3.Distance(point.GetChild(0).position, new Vector3(x + i, y + j));
+                else grid[i, j] = Vector3.Distance(point.position, new Vector3(x + i, y + j));
             }
         }
 
 
     }
 
-    public int findpath()
+    bool iswall(int x,int y)
+    {
+        
+
+        for (int i = 0; i < walls.childCount; i++)
+        {
+            //Debug.Log(walls.GetChild(i));
+            if (walls.GetChild(i).position.x==x && walls.GetChild(i).position.y == y)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void findpath()
     {
         //create map
         map();
 
-        bool br = false;
-
+        
         int x, y;
         x = (int)(Maxrange.x + head.position.x);
         y = (int)(Maxrange.y + head.position.y);
@@ -109,12 +129,10 @@ public class Astar : MonoBehaviour
         for (int i = 0; i < 10000; i++)
         {
             //Debug.Log("start "+next.Count);
-            if (next.Count == 0) { br = true;
+            if (next.Count == 0) { 
                 break;
             }
             if (i >= 9995) {
-                Debug.Log("loopbreak");
-                br = true;
                 break; }
 
             c = next[0];
@@ -122,7 +140,7 @@ public class Astar : MonoBehaviour
 
             if (c.Value == 0) break;
 
-            //Debug.Log("values "+c.Value + "  "+c.Avalue);
+            Debug.Log("("+c.X+","+c.Y+")  values "+c.Value + "  "+c.Avalue);
 
             if (grid[c.X, c.Y + 1] != float.MaxValue)
             {
@@ -132,12 +150,13 @@ public class Astar : MonoBehaviour
                     if (c.Avalue < visited[index].Avalue)
                         visited[index].Parent = c;
                 }
-                else
+                else if (!next.Exists(cor => cor.X == c.X && cor.Y == c.Y + 1))
                 {
                     if (c.Y + 1 < (Maxrange.y - Minrange.y))
                     {
                         cordinate co = new cordinate(c.X, c.Y + 1, grid[c.X, c.Y + 1], c.Avalue + 1, c);
                         next.Add(co);
+                        Debug.Log("new added   up(" + next[next.Count-1].X +" "+ next[next.Count - 1].Y + ")   values  "+ next[next.Count - 1].Value+" "+ next[next.Count - 1].Avalue);
                     }
                 }
             }
@@ -151,11 +170,13 @@ public class Astar : MonoBehaviour
                     if (c.Avalue < visited[index].Avalue)
                         visited[index].Parent = c;
                 }
-                else
+                else if (!next.Exists(cor => cor.X == c.X + 1 && cor.Y == c.Y))
                 {
                     if (c.X + 1 < (Maxrange.x - Minrange.x))
                     {
                         next.Add(new cordinate(c.X + 1, c.Y, grid[c.X + 1, c.Y], c.Avalue + 1, c));
+
+                        Debug.Log("new added   right(" + next[next.Count - 1].X + " " + next[next.Count - 1].Y + ")   values  " + next[next.Count - 1].Value + " " + next[next.Count - 1].Avalue);
                     }
                 }
             }
@@ -170,10 +191,13 @@ public class Astar : MonoBehaviour
                     if (c.Avalue < visited[index].Avalue)
                         visited[index].Parent = c;
                 }
-                else
+                else if (!next.Exists(cor => cor.X == c.X - 1 && cor.Y == c.Y))
                 {
                     if (c.X - 1 > 0)
+                    {
                         next.Add(new cordinate(c.X - 1, c.Y, grid[c.X - 1, c.Y], c.Avalue + 1, c));
+                        Debug.Log("new added   left(" + next[next.Count - 1].X + " " + next[next.Count - 1].Y + ")   values  " + next[next.Count - 1].Value + " " + next[next.Count - 1].Avalue);
+                    }
                 }
             }
 
@@ -187,38 +211,58 @@ public class Astar : MonoBehaviour
                     if (c.Avalue < visited[index].Avalue)
                         visited[index].Parent = c;
                 }
-                else
+                else if (!next.Exists(cor => cor.X == c.X && cor.Y == c.Y - 1))
                 {
                     if (c.Y - 1 > 0)
+                    {
                         next.Add(new cordinate(c.X, c.Y - 1, grid[c.X, c.Y - 1], c.Avalue + 1, c));
+                        Debug.Log("new added   down(" + next[next.Count - 1].X + " " + next[next.Count - 1].Y + ")   values  " + next[next.Count - 1].Value + " " + next[next.Count - 1].Avalue);
+                    }
                 }
             }
 
 
-            next.Sort((a, b) => a.Value.CompareTo(b.Value));
+            next.Sort((a, b) => (a.Value+a.Avalue).CompareTo(b.Value+b.Avalue));
 
             visited.Add(c);
 
+            Debug.Log("visited " + visited.Count + "  next" + next.Count);
 
             //Debug.Log("end " + next.Count);
 
         }
 
 
-        
+
+        //allnodes();
         drawpath(c);
 
         //Debug.Log("next length  "+next.Count);
 
-        int ans = (findcost(c));
-        if (br) ans = -1;
+        //int ans = (findcost(c));
+        //if (br) ans = -1;
 
-        //Debug.Log("cost " + ans);
+        ////Debug.Log("cost " + ans);
 
-        visited.Clear();
-        next.Clear();
+        //visited.Clear();
+        //next.Clear();
 
-        return ans;
+        //return ans;
+        
+    }
+
+    void allnodes()
+    {
+        for (int i = 0; i < visited.Count; i++)
+        {
+            cordinate c = visited[i];
+
+            if (c.Parent == null)
+                Debug.Log("(" + c.X + "  " + c.Y + ")   values (" + c.Avalue + " , " + c.Value + ")       head ");
+            else
+                Debug.Log("(" + c.X + "  " + c.Y + ")   values (" + c.Avalue + " , " + c.Value + ")       (" + c.Parent.X + " " + c.Parent.Y + ") ");
+
+        }
     }
 
     void drawpath(cordinate c)
@@ -248,13 +292,14 @@ public class Astar : MonoBehaviour
 
     void drawpathhelp(cordinate c)
     {
-        //if(c.Parent==null)
-        //    Debug.Log(+c.X + "  " + c.Y + "       head " );
+        //if (c.Parent == null)
+        //    Debug.Log("(" + c.X + "  " + c.Y + ")   values (" + c.Avalue + " , " + c.Value + ")       head ");
         //else
-        //Debug.Log(+ c.X + "  " + c.Y+"       "+c.Parent.X+" "+c.Parent.Y);
+        //    Debug.Log("("+c.X + "  " + c.Y + ")   values ("+c.Avalue+" , "+c.Value+ ")       (" + c.Parent.X + " " + c.Parent.Y+") ");
         GameObject p = Instantiate(dot, transform);
         p.transform.position = new Vector2(c.X - Maxrange.x, c.Y - Maxrange.y);
         p.GetComponent<SpriteRenderer>().color = new Vector4(0, 1, 0, 1);
+        
         if (c.Parent != null)
             drawpathhelp(c.Parent);
     }
@@ -286,7 +331,7 @@ public class Astar : MonoBehaviour
             {
                 GameObject p = Instantiate(dot, transform);
                 p.transform.position = new Vector2(x + i, y + j);
-                p.GetComponent<SpriteRenderer>().color = new Vector4((grid[i, j] / 10), 1 - (grid[i, j] / 10), 0, 1);
+                p.GetComponent<SpriteRenderer>().color = new Vector4((grid[i, j] / 100), 1 - (grid[i, j] / 100), 0, 1);
             }
         }
 
