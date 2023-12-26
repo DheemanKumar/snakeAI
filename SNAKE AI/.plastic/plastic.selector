@@ -1,0 +1,4 @@
+repository "SNAKE AI@DH_kumar@cloud"
+  path "/"
+    br "/main"
+    co "/main"
